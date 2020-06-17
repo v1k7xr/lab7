@@ -6,9 +6,34 @@
 <style>
     .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .cont {border: 4px double black;}
 </style>
 
+{% if app.user %}
+    <p>Sup, {{ app.user.username }}. </p>
+    <a class="link" href="{{ path('app_logout') }}">Logout</a>
+    <a class="link" href="{{ path('book_addBook') }}">Добавить книгу</a>
+{% elseif not app.user %}
+    <a class="link" href="{{ path('app_login') }}">Login</a>
+{% endif %}
+
 <div class="example-wrapper">
-    <p>Books info here</p>
+    <p> /Книги библиотеки/ </p> <br>
+        {% for book in books %}
+        <div class="cont">
+            <p> Книга с номером {{ book.id }} </p>
+            <p> Постер: </p>
+            <div class="image"><img src="data:image/png;base64, {{ book.imageLocation }}" alt="(Картинка)" width="250" height="250"/> </div>
+            <ul>
+            <li> Название: {{ book.NameBook }}</li>
+            <li> Автор: {{ book.AuthorBook }}</li>
+            <li> Дата прочтения: {{ book.ReadingDate|date('Y-m-d') }}</li>
+            {% if app.user %}
+            <a class="link" href="{{ path('book_changeBook', {id:book.id}) }}">Изменить</a>
+            <a class="link" href="{{ path('book_changeBook', {id:book.id}) }}">Удалить</a>
+            {% endif %}
+            </ul>
+        </div>
+        {% endfor %}
 </div>
 {% endblock %}

@@ -1,0 +1,24 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %} Изменение книги {% endblock %}
+
+{% block body %}
+    <h1>Изменить информацию о книге</h1>
+
+    {{ form_start(changeBook) }}
+        <br>
+        <br>
+        <div class="image"><img src="data:image/png;base64, {{ form_widget(changeBook.imageLocation) }}" alt="(Картинка)" width="250" height="250"/> </div>
+        <br>
+        {{ form_row(changeBook.NameBook) }}
+        <br>
+        {{ form_row(changeBook.AuthorBook) }}
+        <br>
+        {{ form_row(changeBook.ReadingDate) }}
+        <br>
+        {% do changeBook.imageLocation.setRendered() %}
+        {% do changeBook.bookLocation.setRendered() %}
+        <button type="submit" class="btn">Добавить</button>
+    {{ form_end(changeBook) }}
+{% endblock %}

@@ -22,6 +22,7 @@ class AppFixtures extends Fixture
 
         // $product = new Product();
         // $manager->persist($product);
+        
         $user = new User();
         $user->setUsername('booklover');
         $user->setPassword($this->passwordEncoder->encodePassword($user, 'Qwerty123!'));
@@ -32,14 +33,16 @@ class AppFixtures extends Fixture
         $book1->setAuthorBook("me");
         $book1->setImageLocation("b52e2bd6d906fb479877d22352da47ca");
         $book1->setBookLocation("7E766F4FCD50982CCBDDD3920F71E9D7");
-        $book1->setReadingDate('2020-12-02');
+        $date1 = \DateTime::createFromFormat('Y-m-d', "2020-12-02");
+        $book1->setReadingDate($date1);
 
         $book2 = new Book();
         $book2->setNameBook("UNIX History");
         $book2->setAuthorBook("Wiki");
         $book2->setImageLocation("b52e2bd6d906fb479877d22352da47ca");
         $book2->setBookLocation("2C84F92A672D769B2D8E0842CA6FEFA2");
-        $book1->setReadingDate(new \DateTime("2020-12-01"));
+        $date2 = \DateTime::createFromFormat('Y-m-d', "2020-12-01");
+        $book2->setReadingDate($date2);
 
         $manager->persist($user);
         $manager->persist($book1);

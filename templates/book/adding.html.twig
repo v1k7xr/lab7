@@ -1,0 +1,25 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Добавление книги{% endblock %}
+
+{% block body %}
+    <h1>Добавить книгу</h1>
+
+    {{ form_start(addingBook) }}
+        <br>
+        {{ form_row(addingBook.NameBook) }}
+        <br>
+        {{ form_row(addingBook.AuthorBook) }}
+        <br>
+        {{ form_row(addingBook.ReadingDate) }}
+        <br>
+        {{ form_row(addingBook.imageLocation) }}
+        <br>
+        {{ form_row(addingBook.bookLocation) }}
+        <br>
+        {% do addingBook.imageLocation.setRendered() %}
+        {% do addingBook.bookLocation.setRendered() %}
+        <button type="submit" class="btn">Добавить</button>
+    {{ form_end(addingBook) }}
+{% endblock %}

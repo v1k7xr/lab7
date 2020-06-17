@@ -1,0 +1,46 @@
+array(2) {
+  [0]=>
+  object(App\Entity\Book)#565 (6) {
+    ["id":"App\Entity\Book":private]=>
+    int(8)
+    ["NameBook":"App\Entity\Book":private]=>
+    string(12) "UNIX History"
+    ["AuthorBook":"App\Entity\Book":private]=>
+    string(4) "Wiki"
+    ["imageLocation":"App\Entity\Book":private]=>
+    string(32) "b52e2bd6d906fb479877d22352da47ca"
+    ["bookLocation":"App\Entity\Book":private]=>
+    string(32) "2C84F92A672D769B2D8E0842CA6FEFA2"
+    ["ReadingDate":"App\Entity\Book":private]=>
+    object(DateTime)#563 (3) {
+      ["date"]=>
+      string(26) "2020-12-01 00:00:00.000000"
+      ["timezone_type"]=>
+      int(3)
+      ["timezone"]=>
+      string(13) "Europe/Moscow"
+    }
+  }
+  [1]=>
+  object(App\Entity\Book)#568 (6) {
+    ["id":"App\Entity\Book":private]=>
+    int(7)
+    ["NameBook":"App\Entity\Book":private]=>
+    string(13) "simple script"
+    ["AuthorBook":"App\Entity\Book":private]=>
+    string(2) "me"
+    ["imageLocation":"App\Entity\Book":private]=>
+    string(32) "b52e2bd6d906fb479877d22352da47ca"
+    ["bookLocation":"App\Entity\Book":private]=>
+    string(32) "7E766F4FCD50982CCBDDD3920F71E9D7"
+    ["ReadingDate":"App\Entity\Book":private]=>
+    object(DateTime)#567 (3) {
+      ["date"]=>
+      string(26) "2020-12-02 00:00:00.000000"
+      ["timezone_type"]=>
+      int(3)
+      ["timezone"]=>
+      string(13) "Europe/Moscow"
+    }
+  }
+}

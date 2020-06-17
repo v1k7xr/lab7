@@ -71,7 +71,7 @@ class Book
         return $this;
     }
 
-    public function getImageLocation(): ?string
+    public function getImageLocation() 
     {
         return $this->imageLocation;
     }
@@ -83,7 +83,7 @@ class Book
         return $this;
     }
 
-    public function getBookLocation(): ?string
+    public function getBookLocation() 
     {
         return $this->bookLocation;
     }
