@@ -23,14 +23,15 @@
         <div class="cont">
             <p> Книга с номером {{ book.id }} </p>
             <p> Постер: </p>
-            <div class="image"><img src="data:image/png;base64, {{ book.imageLocation }}" alt="(Картинка)" width="250" height="250"/> </div>
+            <div class="image"><img src="data:image/png;base64, {{ book.imageLocation }}" alt="(Картинки нет)" width="250" height="250"/> </div>
             <ul>
             <li> Название: {{ book.NameBook }}</li>
             <li> Автор: {{ book.AuthorBook }}</li>
             <li> Дата прочтения: {{ book.ReadingDate|date('Y-m-d') }}</li>
             {% if app.user %}
             <a class="link" href="{{ path('book_changeBook', {id:book.id}) }}">Изменить</a>
-            <a class="link" href="{{ path('book_changeBook', {id:book.id}) }}">Удалить</a>
+            <br>
+            <a class="link" href="{{ path('book_deleteRecord', {id:book.id}) }}">Удалить</a>
             {% endif %}
             </ul>
         </div>

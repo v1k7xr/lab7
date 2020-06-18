@@ -15,7 +15,7 @@ class Book
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    public $id;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -42,9 +42,14 @@ class Book
      */
     private $ReadingDate;
 
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 
     public function getNameBook(): ?string

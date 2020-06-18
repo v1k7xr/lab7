@@ -44,26 +44,148 @@ class BookController extends AbstractController
     /**
     * @Route("/book/change/{id}", name="book_changeBook")
     */
-    public function changeBook($id) {
+    public function changeBook(Request $request, $id) {
 
-        $book = $this->getDoctrine()
-        ->getRepository(Book::class)
-        ->find($id);
+        $securityContext = $this->container->get('security.authorization_checker');
+        if (!$securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirectToRoute('mainpage');
+        }
 
         $path = ".jpg";
 
-        $base64S = $this->getParameter('image_storage_dir') . $book->getImageLocation() . $path;
+        $request = $this->get('request_stack')->getCurrentRequest();
+        
 
-        $data = file_get_contents($base64S);
-        $base64S = base64_encode($data);
+        $entityManager = $this->getDoctrine()->getManager();
+        $book = $entityManager->getRepository(Book::class)->find($id);
 
-        $book->setImageLocation($base64S);
+        $imageLocation = $book->getImageLocation();
+        $bookLocation = $book->getBookLocation();
+
+        $base64S = $this->getParameter('image_storage_dir') . $imageLocation . $path;
+
+        if (file_exists($base64S)) {
+            $data = base64_encode(file_get_contents($base64S));
+        } else {
+            $data = "";
+        }
+        $book->setImageLocation(($data));
 
         $form = $this->createForm(ChangeBookType::class, $book);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+
+            $book->setImageLocation($imageLocation);
+            $book->setBookLocation($bookLocation);
+            $book->setId($id);
+            // perform some action, such as save the object to the database
+            $entityManager->flush();
+
+            return $this->redirectToRoute('mainpage');
+        }
 
         return $this->render('book/change.html.twig', [
+            'book' => $book,
             'changeBook' => $form->createView(),
         ]);
+        
+    }
+
+    /**
+    * @Route("/book/deletebook/{id}", name="book_deleteBook")
+    */
+    public function deleteBook($id) {
+
+        $securityContext = $this->container->get('security.authorization_checker');
+        if (!$securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirectToRoute('mainpage');
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $book = $entityManager->getRepository(Book::class)->find($id);
+
+        $ext = BookController::getFileExtension($book->getBookLocation(), $this->getParameter('book_storage_dir'));
+
+        if ($ext) {
+            $bookLocation = $this->getParameter('book_storage_dir') . $book->getBookLocation() . "." . $ext;
+        }
+        else {
+            return $this->redirectToRoute('mainpage');
+        }
+        
+        unlink($bookLocation);
+
+        $book->setBookLocation("");
+        $book->setId($id);
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('book_changeBook', ['id'=>$id]);
+        
+    }
+
+    /**
+    * @Route("/book/deleteimg/{id}", name="book_deleteImage")
+    */
+    public function deleteImage($id) {
+
+        $securityContext = $this->container->get('security.authorization_checker');
+        if (!$securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirectToRoute('mainpage');
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $book = $entityManager->getRepository(Book::class)->find($id);
+
+        $path = ".jpg";
+
+        $imageLocation = $this->getParameter('image_storage_dir') . $book->getImageLocation() . $path;
+
+        unlink($imageLocation);
+
+        $book->setImageLocation("");
+        $book->setId($id);
+
+        $entityManager->flush();
+
+        return $this->redirectToRoute('book_changeBook', ['id'=>$id]);
+    }
+
+    /**
+    * @Route("/book/deleterecord/{id}", name="book_deleteRecord")
+    */
+    public function deleteRecord($id) {
+
+        $securityContext = $this->container->get('security.authorization_checker');
+        if (!$securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirectToRoute('mainpage');
+        }
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $book = $entityManager->getRepository(Book::class)->find($id);
+
+        $path = ".jpg";
+
+        $imageLocation = $this->getParameter('image_storage_dir') . $book->getImageLocation() . $path;
+
+        $ext = BookController::getFileExtension($book->getBookLocation(), $this->getParameter('book_storage_dir'));
+
+        if ($ext) {
+            $bookLocation = $this->getParameter('book_storage_dir') . $book->getBookLocation() . "." . $ext;
+            unlink($bookLocation);
+        }
+
+        if ($book->getImageLocation() != '') {
+            unlink($imageLocation);   
+        }
+
+        $book->setId($id);
+
+        $entityManager->remove($book);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('mainpage');
     }
 
     /**
@@ -71,11 +193,14 @@ class BookController extends AbstractController
     */
     public function addBook(Request $request) {
 
+        $securityContext = $this->container->get('security.authorization_checker');
+        if (!$securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            return $this->redirectToRoute('mainpage');
+        }
+
         $book = new Book();
 
-        $form = $this->createForm(AddBookType::class, $book);
-
-        $form->handleRequest($request);
+        $form = $this->createForm(AddBookType::class, $book)->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()) {
             
@@ -115,6 +240,21 @@ class BookController extends AbstractController
         return $this->render('book/adding.html.twig', [
             'addingBook' => $form->createView(),
         ]);
+    }
+
+    public static function  getFileExtension($name, $path='')
+    {
+        $path = $path ? $path . '/' : '';
+        $arr_files = scandir($path);
+        foreach ($arr_files as $file)
+        {
+            $file_info = pathinfo($file);
+            if ($name == $file_info['filename'])
+            {
+                return $file_info['extension'];
+            }
+        }
+        return FALSE;
     }
 
 }

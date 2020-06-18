@@ -9,16 +9,29 @@
     {{ form_start(changeBook) }}
         <br>
         <br>
-        <div class="image"><img src="data:image/png;base64, {{ form_widget(changeBook.imageLocation) }}" alt="(Картинка)" width="250" height="250"/> </div>
         <br>
+        <div class="image"><img src="data:image/png;base64, {{ changeBook.vars.value.imageLocation }}" alt="(Картинки нет)" width="250" height="250"/> </div>
         {{ form_row(changeBook.NameBook) }}
         <br>
         {{ form_row(changeBook.AuthorBook) }}
         <br>
         {{ form_row(changeBook.ReadingDate) }}
+        {% if changeBook.vars.value.bookLocation == '' %}
+            <p> Файла книги нет </p>
+        {% else %}
+            <a class="link" href="{{ path('book_deleteBook', {id : changeBook.vars.value.id}) }}">Удалить файл книги</a>
+        {% endif %}
         <br>
+        {% if changeBook.vars.value.bookLocation == '' %}
+            <p> Постера нет </p>
+        {% else %}
+            <a class="link" href="{{ path('book_deleteImage', {id : changeBook.vars.value.id}) }}">Удалить обложку</a>
+        {% endif %}
+        <br>
+       
         {% do changeBook.imageLocation.setRendered() %}
         {% do changeBook.bookLocation.setRendered() %}
-        <button type="submit" class="btn">Добавить</button>
+        {% do changeBook.id.setRendered() %}
+        <button type="submit" class="btn">Изменить</button>
     {{ form_end(changeBook) }}
 {% endblock %}

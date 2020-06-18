@@ -24,8 +24,13 @@ class MainpageController extends AbstractController
         );
         foreach($books as $book) {
             $path = $tPathToFile . "/" . $book->getImageLocation() . ".jpg";
-            $data = file_get_contents($path);
-            $book->setImageLocation(base64_encode($data));
+            if (file_exists($path)) {
+                $data = base64_encode(file_get_contents($path));
+            }
+            else {
+                $data = "";
+            }
+            $book->setImageLocation($data);
         }
 
         return $this->render('mainpage/index.html.twig', [
